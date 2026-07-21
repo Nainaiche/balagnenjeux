@@ -465,81 +465,47 @@
             </div>
         </section>
 
-       <script>
+      <!-- Inclusion de la bibliothèque sécurisée de lecture CSV -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
+
+<script>
     const sheetId = '1pk2PrpQoRD8TV16Dt5oSnZp0oeg8bSfoDas-uSRQ3ls';
-    // URL sécurisée et directe vers l'export CSV de Google Sheets
-    const csvUrl = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:csv`;
+    // URL universelle d'exportation Google Sheets
+    const csvUrl = `https://docs.google.com/spreadsheets/d/${sheetId}/export?format=csv`;
     let allGames = [];
 
-    // Fonction de découpage CSV plus fiable
-    function parseCSVLine(text) {
-        let result = [];
-        let row = [];
-        let inQuotes = false;
-        let current = '';
+    function fetchGames() {
+        Papa.parse(csvUrl, {
+            download: true,
+            header: false,
+            complete: function(results) {
+                // On retire la ligne des titres du tableau
+                const rows = results.data.slice(1);
 
-        for (let i = 0; i < text.length; i++) {
-            let char = text[i];
-            let nextChar = text[i+1];
+                allGames = rows
+                    .filter(row => row[0] && row[0].trim() !== '') // Évite les lignes vides
+                    .map(row => [
+                        row[0] || '', // Titre
+                        row[1] || '', // Joueurs
+                        row[2] || '', // Durée
+                        row[3] || '', // Âge
+                        row[4] || '', // Catégorie / Mécanisme
+                        row[5] || ''  // Thème
+                    ]);
 
-            if (char === '"') {
-                if (inQuotes && nextChar === '"') {
-                    current += '"';
-                    i++;
-                } else {
-                    inQuotes = !inQuotes;
-                }
-            } else if (char === ',' && !inQuotes) {
-                row.push(current.trim());
-                current = '';
-            } else if ((char === '\r' || char === '\n') && !inQuotes) {
-                if (char === '\r' && nextChar === '\n') i++;
-                row.push(current.trim());
-                if (row.some(cell => cell !== '')) result.push(row);
-                row = [];
-                current = '';
-            } else {
-                current += char;
+                populateCategories();
+                displayGames(allGames);
+            },
+            error: function(err) {
+                console.error('Erreur PapaParse:', err);
+                document.querySelector('#gamesTable tbody').innerHTML = `
+                    <tr>
+                        <td colspan="6" style="text-align: center; color: #c0392b; padding: 20px; font-weight: bold;">
+                            Erreur de chargement. Vérifiez que le bouton Partager est sur "Tous les utilisateurs disposant du lien".
+                        </td>
+                    </tr>`;
             }
-        }
-        if (current || row.length > 0) {
-            row.push(current.trim());
-            if (row.some(cell => cell !== '')) result.push(row);
-        }
-        return result;
-    }
-
-    async function fetchGames() {
-        try {
-            const response = await fetch(csvUrl);
-            if (!response.ok) throw new Error('Erreur HTTP: ' + response.status);
-            
-            const csvText = await response.text();
-            const rows = parseCSVLine(csvText);
-
-            // On retire la première ligne (les en-têtes du tableau)
-            const dataRows = rows.slice(1);
-
-            allGames = dataRows.map(row => [
-                row[0] || '', // Titre
-                row[1] || '', // Joueurs
-                row[2] || '', // Durée
-                row[3] || '', // Âge
-                row[4] || '', // Catégorie (ou Mécanisme selon votre Sheet)
-                row[5] || ''  // Thème
-            ]);
-
-            populateCategories();
-            displayGames(allGames);
-        } catch (error) {
-            console.error('Erreur de chargement:', error);
-            document.querySelector('#gamesTable tbody').innerHTML = `
-                <tr>
-                    <td colspan="6" style="text-align: center; color: #c0392b; padding: 20px; font-weight: bold;">
-                        Vérifiez la publication CSV dans Google Sheets (Fichier > Partager > Publier sur le web > Choisir .csv).
-                    </td>
-                </tr>`;
-        }
+        });
     }
 
     function populateCategories() {
