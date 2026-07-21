@@ -6,9 +6,16 @@
     <title>Balagn'en Jeux | Association Jeux de Société en Balagne (Lumio, Corse)</title>
     <meta name="description" content="Découvrez Balagn'en Jeux, l'association de jeux de société en Balagne. Plus de 150 jeux disponibles, soirées mensuelles à Lumio et animations dans les bars locaux.">
     <style>
-        /* --- VARIABLES DE COULEURS & POLICES --- */
+        /* --- VARIABLES DE COULEURS SITE & SHEETS PERSONNALISÉ --- */
         :root {
             --primary-color: #800c1e; /* Rouge bordeaux du logo */
+            --primary-hover: #5d0815;
+            
+            /* --- VOS COULEURS GOOGLE SHEETS --- */
+            --sheets-bordeaux: #900000;      /* Rouge bordeaux en-tête & texte */
+            --sheets-pink-bg: #fdeae8;       /* Fond alterné rose/rouge clair */
+            --sheets-border-color: #e0e0e0;  /* Lignes de la grille */
+            
             --text-dark: #222;
             --bg-light: #fcfbf9;
             --white: #ffffff;
@@ -59,7 +66,7 @@
             font-weight: bold;
             font-size: 0.95rem;
             text-transform: uppercase;
-            transition: background 0.3s;
+            transition: background 0.3s ease;
         }
         nav a:hover {
             background-color: rgba(255, 255, 255, 0.15);
@@ -165,27 +172,47 @@
             border: 0;
         }
 
-        /* --- TABLEAU STYLE GOOGLE SHEETS --- */
+        /* --- RECHERCHE ET TABLEAU FIDÈLE À VOTRE SHEETS --- */
+        .sheets-controls {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            margin-bottom: 1rem;
+        }
+
+        .sheets-controls input, .sheets-controls select {
+            padding: 0.75rem 1rem;
+            border: 2px solid var(--sheets-bordeaux);
+            border-radius: 6px;
+            font-size: 1rem;
+            outline: none;
+            background-color: var(--white);
+        }
+
+        .sheets-controls input:focus, .sheets-controls select:focus {
+            box-shadow: 0 0 0 3px rgba(144, 0, 0, 0.2);
+        }
+
         .table-wrapper {
-            border: 1px solid #c0c0c0;
+            border: 1px solid #ccc;
             border-radius: 6px;
             overflow-x: auto;
             max-height: 600px;
             overflow-y: auto;
-            background-color: #ffffff;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.08);
+            background-color: var(--white);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
         }
 
         #gamesTable {
             width: 100%;
             border-collapse: collapse;
             font-family: Arial, sans-serif;
-            font-size: 0.9rem;
+            font-size: 0.95rem;
         }
 
         #gamesTable thead tr {
-            background-color: var(--primary-color);
-            color: #ffffff;
+            background-color: var(--sheets-bordeaux); /* Bordeaux comme sur la capture */
+            color: var(--white);
             position: sticky;
             top: 0;
             z-index: 10;
@@ -193,15 +220,29 @@
 
         #gamesTable th {
             padding: 10px 12px;
-            border: 1px solid #a6a6a6;
+            border: 1px solid var(--sheets-bordeaux);
             text-align: left;
             font-weight: bold;
+            font-size: 1rem;
         }
 
         #gamesTable td {
             padding: 8px 12px;
-            border: 1px solid #e0e0e0; /* Lignes de grille style tableur */
-            color: #333333;
+            border: 1px solid var(--sheets-border-color);
+            color: var(--sheets-bordeaux); /* Texte rouge bordeaux comme sur la capture */
+            font-weight: 500;
+        }
+
+        /* Mode rangée claire / rose alternée */
+        .row-even {
+            background-color: var(--white);
+        }
+        .row-odd {
+            background-color: var(--sheets-pink-bg); /* Rose clair exact */
+        }
+
+        #gamesTable tbody tr:hover {
+            background-color: #f5d3cf !important; /* Petit survol harmonisé */
         }
 
         /* --- SOIRÉE MENSUELLE --- */
@@ -252,7 +293,7 @@
             height: 180px;
             object-fit: cover;
             border-radius: 6px;
-            transition: transform 0.3s;
+            transition: transform 0.3s ease;
         }
         .photo-grid img:hover {
             transform: scale(1.03);
@@ -274,7 +315,7 @@
 
         /* --- ADHESION --- */
         .adhesion-box {
-            background-color: #fff;
+            background-color: var(--white);
             border: 3px solid var(--primary-color);
             border-radius: 8px;
             padding: 2.5rem;
@@ -303,10 +344,10 @@
             font-weight: bold;
             font-size: 1.1rem;
             border-radius: 5px;
-            transition: transform 0.2s, background 0.3s;
+            transition: transform 0.2s ease, background-color 0.3s ease;
         }
         .btn-helloasso:hover {
-            background-color: #5d0815;
+            background-color: var(--primary-hover);
             transform: translateY(-2px);
         }
         .qr-code {
@@ -444,26 +485,26 @@
         <section id="evenements">
             <h2>Événements à venir</h2>
             <div class="calendar-wrapper">
-                <iframe src="https://calendar.google.com/calendar/embed?src=balagnenjeux%40gmail.com&ctz=Europe%2FParis&color=%23800c1e&wkst=2&mode=AGENDA" style="border: 0" width="800" height="600" frameborder="0" scrolling="no"></iframe>
+                <iframe src="https://calendar.google.com/calendar/embed?src=balagnenjeux%40gmail.com&amp;ctz=Europe%2FParis&amp;color=%23800c1e&amp;wkst=2&amp;mode=AGENDA" title="Calendrier des événements"></iframe>
             </div>
         </section>
 
-        <!-- 2. SECTION NOTRE LUDOTHEQUE (TABLEAU INTERACTIF) -->
+        <!-- 2. SECTION NOTRE LUDOTHEQUE (TABLEAU SHEETS PERSONNALISÉ) -->
         <section id="ludotheque">
             <h2>Notre Ludothèque</h2>
             <p class="intro-text">+ de 150 jeux mis à disposition et présentés par nos bénévoles</p>
             
             <img class="banner-image" src="ludotheque-banner.jpg" alt="Étagères de jeux de société" style="margin-bottom: 2rem; width: 100%;">
 
-            <!-- Barre de recherche et filtres -->
-            <div style="display: flex; gap: 1rem; flex-wrap: wrap; margin-bottom: 1.5rem;">
-                <input type="text" id="searchBar" placeholder="🔍 Rechercher un jeu..." onkeyup="filterGames()" style="flex: 2; padding: 0.75rem; border: 2px solid var(--primary-color); border-radius: 6px; font-size: 1rem;">
-                <select id="categoryFilter" onchange="filterGames()" style="flex: 1; padding: 0.75rem; border: 2px solid var(--primary-color); border-radius: 6px; font-size: 1rem;">
+            <!-- Barre de recherche et filtre -->
+            <div class="sheets-controls">
+                <input type="text" id="searchBar" placeholder="🔍 Rechercher un jeu..." onkeyup="filterGames()" style="flex: 2;">
+                <select id="categoryFilter" onchange="filterGames()" style="flex: 1;">
                     <option value="">Toutes les catégories</option>
                 </select>
             </div>
 
-            <!-- Tableau dynamique -->
+            <!-- Tableau personnalisé à l'image de votre Sheets -->
             <div class="table-wrapper">
                 <table id="gamesTable">
                     <thead>
@@ -489,7 +530,7 @@
             <div class="grid-two-cols">
                 <div class="card-infos">
                     <h3>★ Public - Adulte</h3>
-                    <p style="margin-bottom: 1.5rem; font-weight: bold;">INFOS & INSCRIPTIONS :</p>
+                    <p style="margin-bottom: 1.5rem; font-weight: bold;">INFOS &amp; INSCRIPTIONS :</p>
                     <ul>
                         <li>📞 06.88.83.27.02</li>
                         <li>📷 <a href="https://www.instagram.com/balagn_en_jeux" target="_blank" style="color: var(--white); text-decoration: underline;">@balagn_en_jeux</a></li>
@@ -548,8 +589,8 @@
             <div class="footer-contacts">
                 <h2>Contacts</h2>
                 <p>📞 06.88.83.27.02</p>
-                <p>📷 <a href="https://www.instagram.com/balagn_en_jeux" target="_blank" style="color: var(--white); text-decoration: underline;">@balagn_en_jeux</a></p>
-                <p>🌐 <a href="https://www.helloasso.com/associations/balagn-en-jeux" target="_blank" style="color: #fff;">Campagne HelloAsso</a></p>
+                <p>📷 <a href="https://www.instagram.com/balagn_en_jeux" target="_blank">@balagn_en_jeux</a></p>
+                <p>🌐 <a href="https://www.helloasso.com/associations/balagn-en-jeux" target="_blank">Campagne HelloAsso</a></p>
                 <p>📍 13 route nationale, 20260 LUMIO</p>
             </div>
             <div class="footer-logo">
@@ -561,14 +602,12 @@
         </div>
     </footer>
 
-    <!-- SCRIPT DE CHARGEMENT DU TABLEAU -->
+    <!-- SCRIPT DE CHARGEMENT ET FILTRAGE -->
     <script>
-    const sheetId = '1pk2PrpQoRD8TV16Dt5oSnZp0oeg8bSfoDas-uSRq3Ls';
-    // Utilisation de la passerelle gviz/tq pour contourner les blocages CORS
+    const sheetId = '1pk2PrpQoRD8TV16Dt5oSnZp0oeg8bSfoDas-uSRQ3ls';
     const jsonpUrl = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=responseHandler:loadSheetData`;
     let allGames = [];
 
-    // Fonction appelée automatiquement lorsque Google renvoie les données
     function loadSheetData(data) {
         try {
             const rows = data.table.rows;
@@ -595,8 +634,8 @@
     function showError() {
         document.querySelector('#gamesTable tbody').innerHTML = `
             <tr>
-                <td colspan="6" style="text-align: center; color: #c0392b; padding: 20px; font-weight: bold;">
-                    Impossible de charger les données. Vérifiez l'ID de la feuille Google Sheets.
+                <td colspan="6" style="text-align: center; color: var(--sheets-bordeaux); padding: 20px; font-weight: bold;">
+                    Impossible de charger les données du Google Sheet.
                 </td>
             </tr>`;
     }
@@ -634,20 +673,21 @@
         tbody.innerHTML = '';
 
         if (games.length === 0) {
-            tbody.innerHTML = '<tr><td colspan="6" style="text-align: center; padding: 20px;">Aucun jeu trouvé.</td></tr>';
+            tbody.innerHTML = '<tr><td colspan="6" style="text-align: center; padding: 20px; color: var(--sheets-bordeaux);">Aucun jeu trouvé.</td></tr>';
             return;
         }
 
         games.forEach((game, index) => {
             const tr = document.createElement('tr');
-            // Alternance blanc / gris très léger
-            tr.style.backgroundColor = index % 2 === 0 ? '#ffffff' : '#f8f9fa';
+            
+            // Alternance exactement comme votre image (Ligne 1 Blanche, Ligne 2 Rose...)
+            tr.className = index % 2 === 0 ? 'row-even' : 'row-odd';
 
             const dureeVal = String(game[2]);
             const duree = dureeVal ? (dureeVal.includes('min') || dureeVal.includes('-') ? dureeVal : dureeVal + ' min') : '';
 
             tr.innerHTML = `
-                <td style="font-weight: bold;">${game[0]}</td>
+                <td>${game[0]}</td>
                 <td>${game[1]}</td>
                 <td>${duree}</td>
                 <td>${game[3]}</td>
@@ -676,6 +716,6 @@
     }
 
     document.addEventListener('DOMContentLoaded', fetchGames);
-</script>
+    </script>
 </body>
 </html>
