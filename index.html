@@ -470,42 +470,47 @@
 
 <script>
     const sheetId = '1pk2PrpQoRD8TV16Dt5oSnZp0oeg8bSfoDas-uSRQ3ls';
-    // URL universelle d'exportation Google Sheets
-    const csvUrl = `https://docs.google.com/spreadsheets/d/${sheetId}/export?format=csv`;
+    // URL gviz avec callback JSONP pour contourner les blocages CORS
+    const jsonpUrl = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=responseHandler:loadSheetData`;
     let allGames = [];
 
+    function loadSheetData(data) {
+        try {
+            const rows = data.table.rows;
+            allGames = rows.map(row => {
+                const c = row.c;
+                return [
+                    c[0] ? c[0].v : '', // Titre
+                    c[1] ? c[1].v : '', // Joueurs
+                    c[2] ? c[2].v : '', // Durée
+                    c[3] ? c[3].v : '', // Âge
+                    c[4] ? c[4].v : '', // Catégorie
+                    c[5] ? c[5].v : ''  // Thème
+                ];
+            }).filter(game => game[0] && game[0] !== 'Titre');
+
+            populateCategories();
+            displayGames(allGames);
+        } catch (err) {
+            console.error('Erreur traitement données:', err);
+            showError();
+        }
+    }
+
+    function showError() {
+        document.querySelector('#gamesTable tbody').innerHTML = `
+            <tr>
+                <td colspan="6" style="text-align: center; color: #c0392b; padding: 20px; font-weight: bold;">
+                    Impossible de charger les données. Vérifiez que le bouton "Partager" dans Google Sheets est réglé sur "Tous les utilisateurs disposant du lien".
+                </td>
+            </tr>`;
+    }
+
     function fetchGames() {
-        Papa.parse(csvUrl, {
-            download: true,
-            header: false,
-            complete: function(results) {
-                // On retire la ligne des titres du tableau
-                const rows = results.data.slice(1);
-
-                allGames = rows
-                    .filter(row => row[0] && row[0].trim() !== '') // Évite les lignes vides
-                    .map(row => [
-                        row[0] || '', // Titre
-                        row[1] || '', // Joueurs
-                        row[2] || '', // Durée
-                        row[3] || '', // Âge
-                        row[4] || '', // Catégorie / Mécanisme
-                        row[5] || ''  // Thème
-                    ]);
-
-                populateCategories();
-                displayGames(allGames);
-            },
-            error: function(err) {
-                console.error('Erreur PapaParse:', err);
-                document.querySelector('#gamesTable tbody').innerHTML = `
-                    <tr>
-                        <td colspan="6" style="text-align: center; color: #c0392b; padding: 20px; font-weight: bold;">
-                            Erreur de chargement. Vérifiez que le bouton Partager est sur "Tous les utilisateurs disposant du lien".
-                        </td>
-                    </tr>`;
-            }
-        });
+        const script = document.createElement('script');
+        script.src = jsonpUrl;
+        script.onerror = showError;
+        document.body.appendChild(script);
     }
 
     function populateCategories() {
