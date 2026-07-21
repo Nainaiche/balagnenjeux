@@ -8,7 +8,7 @@
     <style>
         /* --- VARIABLES DE COULEURS & POLICES --- */
         :root {
-            --primary-color: #800c1e; /* Rouge bordeaux de votre logo */
+            --primary-color: #800c1e; /* Rouge bordeaux du logo */
             --text-dark: #222;
             --bg-light: #fcfbf9;
             --white: #ffffff;
@@ -21,7 +21,7 @@
             padding: 0;
         }
         html {
-            scroll-behavior: smooth; /* Défilement doux lors du clic sur le menu */
+            scroll-behavior: smooth;
         }
         body {
             font-family: 'Trebuchet MS', Arial, sans-serif;
@@ -30,7 +30,6 @@
             line-height: 1.6;
         }
 
-        /* Titres percutants comme sur votre affiche */
         h1, h2, h3 {
             color: var(--primary-color);
             text-transform: uppercase;
@@ -66,7 +65,7 @@
             background-color: rgba(255, 255, 255, 0.15);
         }
 
-        /* --- EN-TETE / ACCUEIL (Avec image de bannière) --- */
+        /* --- EN-TETE / ACCUEIL --- */
         header {
             background-image: url('banniere-jeux.jpg');
             background-size: cover;
@@ -91,7 +90,6 @@
             z-index: 1;
         }
 
-        /* Conteneur aligné : logo à gauche, texte à droite */
         .header-content {
             max-width: 1100px;
             margin: 0 auto;
@@ -118,12 +116,6 @@
             margin-bottom: 0;
             color: var(--white);
             text-shadow: 2px 2px 4px rgba(0,0,0,0.6);
-        }
-        header h2 {
-            color: var(--white);
-            font-size: 1.3rem;
-            margin-top: 0.5rem;
-            text-shadow: 1px 1px 3px rgba(0,0,0,0.6);
         }
 
         /* --- CONTENEUR GLOBAL --- */
@@ -153,7 +145,7 @@
             color: var(--primary-color);
         }
 
-        /* --- CALENDRIER (EVENEMENTS) --- */
+        /* --- CALENDRIER --- */
         .calendar-wrapper {
             background: var(--white);
             border: 3px solid var(--primary-color);
@@ -222,7 +214,7 @@
             height: 350px;
         }
 
-        /* --- ANIMATIONS & GRILLE DE PHOTOS --- */
+        /* --- ANIMATIONS & PHOTOS --- */
         .photo-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
@@ -296,7 +288,7 @@
             height: auto;
         }
 
-        /* --- CONTACT & PIED DE PAGE --- */
+        /* --- FOOTER --- */
         .banner-bottom {
             width: 100%;
             height: 250px;
@@ -360,7 +352,7 @@
             z-index: 2;
         }
 
-        /* --- ADAPTATION MOBILE (RESPONSIVE) --- */
+        /* --- RESPONSIVE --- */
         @media (max-width: 768px) {
             header h1 {
                 font-size: 2rem;
@@ -412,7 +404,7 @@
         </div>
     </nav>
 
-    <!-- EN-TETE (LOGO + TITRE PRINCIPAL) -->
+    <!-- EN-TETE -->
     <header id="accueil">
         <div class="header-content">
             <img class="logo-principal" src="logo.png" alt="Logo Balagn'en Jeux">
@@ -422,7 +414,7 @@
 
     <div class="container">
 
-        <!-- 1. SECTION EVENEMENTS (GOOGLE CALENDAR) -->
+        <!-- 1. SECTION EVENEMENTS -->
         <section id="evenements">
             <h2>Événements à venir</h2>
             <div class="calendar-wrapper">
@@ -430,21 +422,13 @@
             </div>
         </section>
 
-        <!-- 2. SECTION NOTRE LUDOTHEQUE -->
-      <section id="ludotheque">
-    <h2>Notre Ludothèque</h2>
-    <p class="intro-text">+ de 150 jeux mis à disposition et présentés par nos bénévoles</p>
-    
-    <img class="banner-image" src="ludotheque-banner.jpg" alt="Étagères de jeux de société" style="margin-bottom: 2rem; width: 100%;">
+        <!-- 2. SECTION NOTRE LUDOTHEQUE (TABLEAU INTERACTIF) -->
+        <section id="ludotheque">
+            <h2>Notre Ludothèque</h2>
+            <p class="intro-text">+ de 150 jeux mis à disposition et présentés par nos bénévoles</p>
+            
+            <img class="banner-image" src="ludotheque-banner.jpg" alt="Étagères de jeux de société" style="margin-bottom: 2rem; width: 100%;">
 
-    <!-- Affichage direct et garanti de votre Google Sheet -->
-    <div style="border: 3px solid var(--primary-color); border-radius: 8px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.05); height: 600px;">
-        <iframe 
-            src="https://docs.google.com/spreadsheets/d/e/2PACX-1vQEBzA7IzYXnWnM33g8GrERrkZJP_anXqHKvRNTejZT76zOKBSW8IK3j5IC7SymrdJwwQI7Qd9bRZgU/pubhtml?widget=true&amp;headers=false" 
-            style="width: 100%; height: 100%; border: none;">
-        </iframe>
-    </div>
-</section>
             <!-- Barre de recherche et filtres -->
             <div style="display: flex; gap: 1rem; flex-wrap: wrap; margin-bottom: 1.5rem;">
                 <input type="text" id="searchBar" placeholder="🔍 Rechercher un jeu..." onkeyup="filterGames()" style="flex: 2; padding: 0.75rem; border: 2px solid var(--primary-color); border-radius: 6px; font-size: 1rem;">
@@ -454,9 +438,9 @@
             </div>
 
             <!-- Tableau dynamique -->
-            <div class="table-wrapper" style="border: 3px solid var(--primary-color); border-radius: 8px; overflow-x: auto; box-shadow: 0 4px 15px rgba(0,0,0,0.05);">
+            <div class="table-wrapper" style="border: 3px solid var(--primary-color); border-radius: 8px; overflow-x: auto; box-shadow: 0 4px 15px rgba(0,0,0,0.05); max-height: 600px; overflow-y: auto;">
                 <table id="gamesTable" style="width: 100%; border-collapse: collapse; text-align: left;">
-                    <thead>
+                    <thead style="position: sticky; top: 0; z-index: 10;">
                         <tr style="background-color: var(--primary-color); color: white;">
                             <th style="padding: 12px;">Titre</th>
                             <th style="padding: 12px;">Joueurs</th>
@@ -467,129 +451,11 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr><td colspan="6" style="text-align: center; padding: 20px;">Chargement des jeux...</td></tr>
+                        <tr><td colspan="6" style="text-align: center; padding: 20px;">Chargement de la liste des jeux...</td></tr>
                     </tbody>
                 </table>
             </div>
         </section>
-
-      <!-- Inclusion de la bibliothèque sécurisée de lecture CSV -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
-
-<script>
-    const sheetId = '1pk2PrpQoRD8TV16Dt5oSnZp0oeg8bSfoDas-uSRQ3ls';
-    // URL gviz avec callback JSONP pour contourner les blocages CORS
-    const jsonpUrl = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=responseHandler:loadSheetData`;
-    let allGames = [];
-
-    function loadSheetData(data) {
-        try {
-            const rows = data.table.rows;
-            allGames = rows.map(row => {
-                const c = row.c;
-                return [
-                    c[0] ? c[0].v : '', // Titre
-                    c[1] ? c[1].v : '', // Joueurs
-                    c[2] ? c[2].v : '', // Durée
-                    c[3] ? c[3].v : '', // Âge
-                    c[4] ? c[4].v : '', // Catégorie
-                    c[5] ? c[5].v : ''  // Thème
-                ];
-            }).filter(game => game[0] && game[0] !== 'Titre');
-
-            populateCategories();
-            displayGames(allGames);
-        } catch (err) {
-            console.error('Erreur traitement données:', err);
-            showError();
-        }
-    }
-
-    function showError() {
-        document.querySelector('#gamesTable tbody').innerHTML = `
-            <tr>
-                <td colspan="6" style="text-align: center; color: #c0392b; padding: 20px; font-weight: bold;">
-                    Impossible de charger les données. Vérifiez que le bouton "Partager" dans Google Sheets est réglé sur "Tous les utilisateurs disposant du lien".
-                </td>
-            </tr>`;
-    }
-
-    function fetchGames() {
-        const script = document.createElement('script');
-        script.src = jsonpUrl;
-        script.onerror = showError;
-        document.body.appendChild(script);
-    }
-
-    function populateCategories() {
-        const categories = new Set();
-        allGames.forEach(game => {
-            if (game[4]) {
-                const cats = String(game[4]).split(',');
-                cats.forEach(c => categories.add(c.trim()));
-            }
-        });
-        
-        const select = document.getElementById('categoryFilter');
-        select.innerHTML = '<option value="">Toutes les catégories</option>';
-        Array.from(categories).sort().forEach(cat => {
-            if(cat) {
-                const opt = document.createElement('option');
-                opt.value = cat;
-                opt.textContent = cat;
-                select.appendChild(opt);
-            }
-        });
-    }
-
-    function displayGames(games) {
-        const tbody = document.querySelector('#gamesTable tbody');
-        tbody.innerHTML = '';
-
-        if (games.length === 0) {
-            tbody.innerHTML = '<tr><td colspan="6" style="text-align: center; padding: 20px;">Aucun jeu trouvé.</td></tr>';
-            return;
-        }
-
-        games.forEach((game, index) => {
-            const tr = document.createElement('tr');
-            tr.style.backgroundColor = index % 2 === 0 ? '#f9f9f9' : '#ffffff';
-            tr.style.borderBottom = '1px solid #ddd';
-
-            const dureeVal = String(game[2]);
-            const duree = dureeVal ? (dureeVal.includes('min') || dureeVal.includes('-') ? dureeVal : dureeVal + ' min') : '';
-
-            tr.innerHTML = `
-                <td style="padding: 10px; font-weight: bold;">${game[0]}</td>
-                <td style="padding: 10px;">${game[1]}</td>
-                <td style="padding: 10px;">${duree}</td>
-                <td style="padding: 10px;">${game[3]}</td>
-                <td style="padding: 10px;">${game[4]}</td>
-                <td style="padding: 10px;">${game[5]}</td>
-            `;
-            tbody.appendChild(tr);
-        });
-    }
-
-    function filterGames() {
-        const search = document.getElementById('searchBar').value.toLowerCase();
-        const category = document.getElementById('categoryFilter').value.toLowerCase();
-
-        const filtered = allGames.filter(game => {
-            const title = String(game[0] || '').toLowerCase();
-            const gameCat = String(game[4] || '').toLowerCase();
-
-            const matchesSearch = title.includes(search);
-            const matchesCat = category === '' || gameCat.includes(category);
-
-            return matchesSearch && matchesCat;
-        });
-
-        displayGames(filtered);
-    }
-
-    document.addEventListener('DOMContentLoaded', fetchGames);
-</script>
 
         <!-- 3. SECTION SOIRÉES -->
         <section id="soirees">
@@ -646,7 +512,7 @@
             </div>
         </section>
 
-    </div> <!-- FIN DU CONTENEUR -->
+    </div>
 
     <img class="banner-bottom" src="cartes-main.jpg" alt="Cartes de jeu en main">
 
@@ -669,5 +535,137 @@
         </div>
     </footer>
 
+    <!-- SCRIPT DE CHARGEMENT DU TABLEAU -->
+    <script>
+        const sheetId = '1pk2PrpQoRD8TV16Dt5oSnZp0oeg8bSfoDas-uSRQ3ls';
+        const csvUrl = `https://docs.google.com/spreadsheets/d/${sheetId}/export?format=csv`;
+        let allGames = [];
+
+        // Analyseur CSV sécurisé qui gère les guillemets et virgules
+        function parseCSVLine(text) {
+            let p = '', c = '', r = [];
+            let q = false;
+            for (let i = 0; i < text.length; i++) {
+                c = text[i];
+                if (c === '"') {
+                    if (q && text[i+1] === '"') { p += '"'; i++; }
+                    else { q = !q; }
+                } else if (c === ',' && !q) {
+                    r.push(p.trim());
+                    p = '';
+                } else {
+                    p += c;
+                }
+            }
+            r.push(p.trim());
+            return r;
+        }
+
+        async function fetchGames() {
+            try {
+                const response = await fetch(csvUrl);
+                if (!response.ok) throw new Error("Erreur de réponse réseau");
+                
+                const data = await response.text();
+                const lines = data.split(/\r\n|\n/);
+                
+                allGames = [];
+                for (let i = 1; i < lines.length; i++) {
+                    if (!lines[i].trim()) continue;
+                    const row = parseCSVLine(lines[i]);
+                    if (row[0] && row[0].toLowerCase() !== 'titre') {
+                        allGames.push([
+                            row[0] || '', // Titre
+                            row[1] || '', // Joueurs
+                            row[2] || '', // Durée
+                            row[3] || '', // Âge
+                            row[4] || '', // Catégorie
+                            row[5] || ''  // Thème
+                        ]);
+                    }
+                }
+
+                populateCategories();
+                displayGames(allGames);
+            } catch (err) {
+                console.error("Erreur de chargement :", err);
+                document.querySelector('#gamesTable tbody').innerHTML = `
+                    <tr>
+                        <td colspan="6" style="text-align: center; color: #c0392b; padding: 20px; font-weight: bold;">
+                            Impossible de charger la liste des jeux. Assurez-vous que le document Google Sheets est partagé en mode "Tous les utilisateurs disposant du lien".
+                        </td>
+                    </tr>`;
+            }
+        }
+
+        function populateCategories() {
+            const categories = new Set();
+            allGames.forEach(game => {
+                if (game[4]) {
+                    const cats = String(game[4]).split(',');
+                    cats.forEach(c => categories.add(c.trim()));
+                }
+            });
+            
+            const select = document.getElementById('categoryFilter');
+            select.innerHTML = '<option value="">Toutes les catégories</option>';
+            Array.from(categories).sort().forEach(cat => {
+                if(cat) {
+                    const opt = document.createElement('option');
+                    opt.value = cat;
+                    opt.textContent = cat;
+                    select.appendChild(opt);
+                }
+            });
+        }
+
+        function displayGames(games) {
+            const tbody = document.querySelector('#gamesTable tbody');
+            tbody.innerHTML = '';
+
+            if (games.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="6" style="text-align: center; padding: 20px;">Aucun jeu trouvé.</td></tr>';
+                return;
+            }
+
+            games.forEach((game, index) => {
+                const tr = document.createElement('tr');
+                tr.style.backgroundColor = index % 2 === 0 ? '#f9f9f9' : '#ffffff';
+                tr.style.borderBottom = '1px solid #ddd';
+
+                const dureeVal = String(game[2]);
+                const duree = dureeVal ? (dureeVal.includes('min') || dureeVal.includes('-') ? dureeVal : dureeVal + ' min') : '';
+
+                tr.innerHTML = `
+                    <td style="padding: 10px; font-weight: bold;">${game[0]}</td>
+                    <td style="padding: 10px;">${game[1]}</td>
+                    <td style="padding: 10px;">${duree}</td>
+                    <td style="padding: 10px;">${game[3]}</td>
+                    <td style="padding: 10px;">${game[4]}</td>
+                    <td style="padding: 10px;">${game[5]}</td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function filterGames() {
+            const search = document.getElementById('searchBar').value.toLowerCase();
+            const category = document.getElementById('categoryFilter').value.toLowerCase();
+
+            const filtered = allGames.filter(game => {
+                const title = String(game[0] || '').toLowerCase();
+                const gameCat = String(game[4] || '').toLowerCase();
+
+                const matchesSearch = title.includes(search);
+                const matchesCat = category === '' || gameCat.includes(category);
+
+                return matchesSearch && matchesCat;
+            });
+
+            displayGames(filtered);
+        }
+
+        document.addEventListener('DOMContentLoaded', fetchGames);
+    </script>
 </body>
 </html>
