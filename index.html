@@ -465,126 +465,152 @@
             </div>
         </section>
 
-        <script>
-            const sheetId = '1pk2PrpQoRD8TV16Dt5oSnZp0oeg8bSfoDas-uSRQ3ls';
-            const csvUrl = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:csv`;
-            let allGames = [];
+       <script>
+    const sheetId = '1pk2PrpQoRD8TV16Dt5oSnZp0oeg8bSfoDas-uSRQ3ls';
+    // URL sécurisée et directe vers l'export CSV de Google Sheets
+    const csvUrl = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:csv`;
+    let allGames = [];
 
-            function parseCSV(text) {
-                const lines = text.split(/\r\n|\n/);
-                const result = [];
-                for (let line of lines) {
-                    if (!line.trim()) continue;
-                    const row = line.match(/(".*?"|[^",\s]+)(?=\s*,|\s*$)/g) || line.split(',');
-                    result.push(row.map(cell => cell.replace(/^"|"$/g, '').trim()));
+    // Fonction de découpage CSV plus fiable
+    function parseCSVLine(text) {
+        let result = [];
+        let row = [];
+        let inQuotes = false;
+        let current = '';
+
+        for (let i = 0; i < text.length; i++) {
+            let char = text[i];
+            let nextChar = text[i+1];
+
+            if (char === '"') {
+                if (inQuotes && nextChar === '"') {
+                    current += '"';
+                    i++;
+                } else {
+                    inQuotes = !inQuotes;
                 }
-                return result;
+            } else if (char === ',' && !inQuotes) {
+                row.push(current.trim());
+                current = '';
+            } else if ((char === '\r' || char === '\n') && !inQuotes) {
+                if (char === '\r' && nextChar === '\n') i++;
+                row.push(current.trim());
+                if (row.some(cell => cell !== '')) result.push(row);
+                row = [];
+                current = '';
+            } else {
+                current += char;
             }
+        }
+        if (current || row.length > 0) {
+            row.push(current.trim());
+            if (row.some(cell => cell !== '')) result.push(row);
+        }
+        return result;
+    }
 
-            async function fetchGames() {
-                try {
-                    const response = await fetch(csvUrl);
-                    if (!response.ok) throw new Error('Erreur HTTP: ' + response.status);
-                    
-                    const csvText = await response.text();
-                    const rows = parseCSV(csvText);
+    async function fetchGames() {
+        try {
+            const response = await fetch(csvUrl);
+            if (!response.ok) throw new Error('Erreur HTTP: ' + response.status);
+            
+            const csvText = await response.text();
+            const rows = parseCSVLine(csvText);
 
-                    allGames = rows.map(row => [
-                        row[0] || '', // Titre
-                        row[1] || '', // Joueurs
-                        row[2] || '', // Durée
-                        row[3] || '', // Âge
-                        row[4] || '', // Catégorie
-                        row[5] || ''  // Thème
-                    ]);
+            // On retire la première ligne (les en-têtes du tableau)
+            const dataRows = rows.slice(1);
 
-                    allGames = allGames.filter(game => {
-                        const title = String(game[0]).trim();
-                        return title !== '' && title !== 'Titre' && title !== 'StringFilter';
-                    });
+            allGames = dataRows.map(row => [
+                row[0] || '', // Titre
+                row[1] || '', // Joueurs
+                row[2] || '', // Durée
+                row[3] || '', // Âge
+                row[4] || '', // Catégorie (ou Mécanisme selon votre Sheet)
+                row[5] || ''  // Thème
+            ]);
 
-                    populateCategories();
-                    displayGames(allGames);
-                } catch (error) {
-                    console.error('Erreur de chargement:', error);
-                    document.querySelector('#gamesTable tbody').innerHTML = `
-                        <tr>
-                            <td colspan="6" style="text-align: center; color: #c0392b; padding: 20px; font-weight: bold;">
-                                Vérifiez dans Google Sheets : Fichier > Partager > Publier sur le web.
-                            </td>
-                        </tr>`;
-                }
+            populateCategories();
+            displayGames(allGames);
+        } catch (error) {
+            console.error('Erreur de chargement:', error);
+            document.querySelector('#gamesTable tbody').innerHTML = `
+                <tr>
+                    <td colspan="6" style="text-align: center; color: #c0392b; padding: 20px; font-weight: bold;">
+                        Vérifiez la publication CSV dans Google Sheets (Fichier > Partager > Publier sur le web > Choisir .csv).
+                    </td>
+                </tr>`;
+        }
+    }
+
+    function populateCategories() {
+        const categories = new Set();
+        allGames.forEach(game => {
+            if (game[4]) {
+                const cats = String(game[4]).split(',');
+                cats.forEach(c => categories.add(c.trim()));
             }
-
-            function populateCategories() {
-                const categories = new Set();
-                allGames.forEach(game => {
-                    if (game[4]) {
-                        const cats = String(game[4]).split(',');
-                        cats.forEach(c => categories.add(c.trim()));
-                    }
-                });
-                
-                const select = document.getElementById('categoryFilter');
-                select.innerHTML = '<option value="">Toutes les catégories</option>';
-                Array.from(categories).sort().forEach(cat => {
-                    if(cat) {
-                        const opt = document.createElement('option');
-                        opt.value = cat;
-                        opt.textContent = cat;
-                        select.appendChild(opt);
-                    }
-                });
+        });
+        
+        const select = document.getElementById('categoryFilter');
+        select.innerHTML = '<option value="">Toutes les catégories</option>';
+        Array.from(categories).sort().forEach(cat => {
+            if(cat) {
+                const opt = document.createElement('option');
+                opt.value = cat;
+                opt.textContent = cat;
+                select.appendChild(opt);
             }
+        });
+    }
 
-            function displayGames(games) {
-                const tbody = document.querySelector('#gamesTable tbody');
-                tbody.innerHTML = '';
+    function displayGames(games) {
+        const tbody = document.querySelector('#gamesTable tbody');
+        tbody.innerHTML = '';
 
-                if (games.length === 0) {
-                    tbody.innerHTML = '<tr><td colspan="6" style="text-align: center; padding: 20px;">Aucun jeu trouvé.</td></tr>';
-                    return;
-                }
+        if (games.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="6" style="text-align: center; padding: 20px;">Aucun jeu trouvé.</td></tr>';
+            return;
+        }
 
-                games.forEach((game, index) => {
-                    const tr = document.createElement('tr');
-                    tr.style.backgroundColor = index % 2 === 0 ? '#f9f9f9' : '#ffffff';
-                    tr.style.borderBottom = '1px solid #ddd';
+        games.forEach((game, index) => {
+            const tr = document.createElement('tr');
+            tr.style.backgroundColor = index % 2 === 0 ? '#f9f9f9' : '#ffffff';
+            tr.style.borderBottom = '1px solid #ddd';
 
-                    const dureeVal = String(game[2]);
-                    const duree = dureeVal ? (dureeVal.includes('min') ? dureeVal : dureeVal + ' min') : '';
+            const dureeVal = String(game[2]);
+            const duree = dureeVal ? (dureeVal.includes('min') || dureeVal.includes('-') ? dureeVal : dureeVal + ' min') : '';
 
-                    tr.innerHTML = `
-                        <td style="padding: 10px; font-weight: bold;">${game[0]}</td>
-                        <td style="padding: 10px;">${game[1]}</td>
-                        <td style="padding: 10px;">${duree}</td>
-                        <td style="padding: 10px;">${game[3]}</td>
-                        <td style="padding: 10px;">${game[4]}</td>
-                        <td style="padding: 10px;">${game[5]}</td>
-                    `;
-                    tbody.appendChild(tr);
-                });
-            }
+            tr.innerHTML = `
+                <td style="padding: 10px; font-weight: bold;">${game[0]}</td>
+                <td style="padding: 10px;">${game[1]}</td>
+                <td style="padding: 10px;">${duree}</td>
+                <td style="padding: 10px;">${game[3]}</td>
+                <td style="padding: 10px;">${game[4]}</td>
+                <td style="padding: 10px;">${game[5]}</td>
+            `;
+            tbody.appendChild(tr);
+        });
+    }
 
-            function filterGames() {
-                const search = document.getElementById('searchBar').value.toLowerCase();
-                const category = document.getElementById('categoryFilter').value.toLowerCase();
+    function filterGames() {
+        const search = document.getElementById('searchBar').value.toLowerCase();
+        const category = document.getElementById('categoryFilter').value.toLowerCase();
 
-                const filtered = allGames.filter(game => {
-                    const title = String(game[0] || '').toLowerCase();
-                    const gameCat = String(game[4] || '').toLowerCase();
+        const filtered = allGames.filter(game => {
+            const title = String(game[0] || '').toLowerCase();
+            const gameCat = String(game[4] || '').toLowerCase();
 
-                    const matchesSearch = title.includes(search);
-                    const matchesCat = category === '' || gameCat.includes(category);
+            const matchesSearch = title.includes(search);
+            const matchesCat = category === '' || gameCat.includes(category);
 
-                    return matchesSearch && matchesCat;
-                });
+            return matchesSearch && matchesCat;
+        });
 
-                displayGames(filtered);
-            }
+        displayGames(filtered);
+    }
 
-            document.addEventListener('DOMContentLoaded', fetchGames);
-        </script>
+    document.addEventListener('DOMContentLoaded', fetchGames);
+</script>
 
         <!-- 3. SECTION SOIRÉES -->
         <section id="soirees">
