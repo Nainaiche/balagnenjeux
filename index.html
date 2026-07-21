@@ -165,17 +165,43 @@
             border: 0;
         }
 
-        /* --- LUDOTHEQUE --- */
-        .intro-text {
-            font-size: 1.1rem;
-            margin-bottom: 1.5rem;
-            font-style: italic;
+        /* --- TABLEAU STYLE GOOGLE SHEETS --- */
+        .table-wrapper {
+            border: 1px solid #c0c0c0;
+            border-radius: 6px;
+            overflow-x: auto;
+            max-height: 600px;
+            overflow-y: auto;
+            background-color: #ffffff;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.08);
         }
-        .banner-image {
+
+        #gamesTable {
             width: 100%;
-            height: auto;
-            border-radius: 8px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            border-collapse: collapse;
+            font-family: Arial, sans-serif;
+            font-size: 0.9rem;
+        }
+
+        #gamesTable thead tr {
+            background-color: var(--primary-color);
+            color: #ffffff;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        #gamesTable th {
+            padding: 10px 12px;
+            border: 1px solid #a6a6a6;
+            text-align: left;
+            font-weight: bold;
+        }
+
+        #gamesTable td {
+            padding: 8px 12px;
+            border: 1px solid #e0e0e0; /* Lignes de grille style tableur */
+            color: #333333;
         }
 
         /* --- SOIRÉE MENSUELLE --- */
@@ -438,16 +464,16 @@
             </div>
 
             <!-- Tableau dynamique -->
-            <div class="table-wrapper" style="border: 3px solid var(--primary-color); border-radius: 8px; overflow-x: auto; box-shadow: 0 4px 15px rgba(0,0,0,0.05); max-height: 600px; overflow-y: auto;">
-                <table id="gamesTable" style="width: 100%; border-collapse: collapse; text-align: left;">
-                    <thead style="position: sticky; top: 0; z-index: 10;">
-                        <tr style="background-color: var(--primary-color); color: white;">
-                            <th style="padding: 12px;">Titre</th>
-                            <th style="padding: 12px;">Joueurs</th>
-                            <th style="padding: 12px;">Durée</th>
-                            <th style="padding: 12px;">Âge</th>
-                            <th style="padding: 12px;">Catégorie</th>
-                            <th style="padding: 12px;">Thème</th>
+            <div class="table-wrapper">
+                <table id="gamesTable">
+                    <thead>
+                        <tr>
+                            <th>Titre</th>
+                            <th>Joueurs</th>
+                            <th>Durée</th>
+                            <th>Âge</th>
+                            <th>Catégorie</th>
+                            <th>Thème</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -537,7 +563,7 @@
 
     <!-- SCRIPT DE CHARGEMENT DU TABLEAU -->
     <script>
-    const sheetId = '1pk2PrpQoRD8TV16Dt5oSnZp0oeg8bSfoDas-uSRq3Ls';
+    const sheetId = '1pk2PrpQoRD8TV16Dt5oSnZp0oeg8bSfoDas-uSRQ3ls';
     // Utilisation de la passerelle gviz/tq pour contourner les blocages CORS
     const jsonpUrl = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=responseHandler:loadSheetData`;
     let allGames = [];
@@ -614,19 +640,19 @@
 
         games.forEach((game, index) => {
             const tr = document.createElement('tr');
-            tr.style.backgroundColor = index % 2 === 0 ? '#f9f9f9' : '#ffffff';
-            tr.style.borderBottom = '1px solid #ddd';
+            // Alternance blanc / gris très léger
+            tr.style.backgroundColor = index % 2 === 0 ? '#ffffff' : '#f8f9fa';
 
             const dureeVal = String(game[2]);
             const duree = dureeVal ? (dureeVal.includes('min') || dureeVal.includes('-') ? dureeVal : dureeVal + ' min') : '';
 
             tr.innerHTML = `
-                <td style="padding: 10px; font-weight: bold;">${game[0]}</td>
-                <td style="padding: 10px;">${game[1]}</td>
-                <td style="padding: 10px;">${duree}</td>
-                <td style="padding: 10px;">${game[3]}</td>
-                <td style="padding: 10px;">${game[4]}</td>
-                <td style="padding: 10px;">${game[5]}</td>
+                <td style="font-weight: bold;">${game[0]}</td>
+                <td>${game[1]}</td>
+                <td>${duree}</td>
+                <td>${game[3]}</td>
+                <td>${game[4]}</td>
+                <td>${game[5]}</td>
             `;
             tbody.appendChild(tr);
         });
