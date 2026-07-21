@@ -431,12 +431,20 @@
         </section>
 
         <!-- 2. SECTION NOTRE LUDOTHEQUE -->
-        <section id="ludotheque">
-            <h2>Notre Ludothèque</h2>
-            <p class="intro-text">+ de 150 jeux mis à disposition et présentés par nos bénévoles</p>
-            
-            <img class="banner-image" src="ludotheque-banner.jpg" alt="Étagères de jeux de société" style="margin-bottom: 2rem;">
+      <section id="ludotheque">
+    <h2>Notre Ludothèque</h2>
+    <p class="intro-text">+ de 150 jeux mis à disposition et présentés par nos bénévoles</p>
+    
+    <img class="banner-image" src="ludotheque-banner.jpg" alt="Étagères de jeux de société" style="margin-bottom: 2rem; width: 100%;">
 
+    <!-- Affichage direct et garanti de votre Google Sheet -->
+    <div style="border: 3px solid var(--primary-color); border-radius: 8px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.05); height: 600px;">
+        <iframe 
+            src="https://docs.google.com/spreadsheets/d/e/2PACX-1vQEBzA7IzYXnWnM33g8GrERrkZJP_anXqHKvRNTejZT76zOKBSW8IK3j5IC7SymrdJwwQI7Qd9bRZgU/pubhtml?widget=true&amp;headers=false" 
+            style="width: 100%; height: 100%; border: none;">
+        </iframe>
+    </div>
+</section>
             <!-- Barre de recherche et filtres -->
             <div style="display: flex; gap: 1rem; flex-wrap: wrap; margin-bottom: 1.5rem;">
                 <input type="text" id="searchBar" placeholder="🔍 Rechercher un jeu..." onkeyup="filterGames()" style="flex: 2; padding: 0.75rem; border: 2px solid var(--primary-color); border-radius: 6px; font-size: 1rem;">
