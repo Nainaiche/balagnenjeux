@@ -5,6 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Balagn'en Jeux | Association Jeux de Société en Balagne (Lumio, Corse)</title>
     <meta name="description" content="Découvrez Balagn'en Jeux, l'association de jeux de société en Balagne. Plus de 150 jeux disponibles, soirées mensuelles à Lumio et animations dans les bars locaux.">
+    
+    <!-- IMPORTATION DE LA POLICE OSWALD -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600&display=swap" rel="stylesheet">
+
     <style>
         /* --- VARIABLES DE COULEURS SITE & SHEETS PERSONNALISÉ --- */
         :root {
@@ -185,6 +191,7 @@
             border: 2px solid var(--sheets-bordeaux);
             border-radius: 6px;
             font-size: 1rem;
+            font-family: 'Oswald', sans-serif;
             outline: none;
             background-color: var(--white);
         }
@@ -206,12 +213,13 @@
         #gamesTable {
             width: 100%;
             border-collapse: collapse;
-            font-family: Arial, sans-serif;
-            font-size: 0.95rem;
+            font-family: 'Oswald', sans-serif; /* Application de la police Oswald */
+            font-size: 1.05rem;
+            letter-spacing: 0.5px;
         }
 
         #gamesTable thead tr {
-            background-color: var(--sheets-bordeaux); /* Bordeaux comme sur la capture */
+            background-color: var(--sheets-bordeaux);
             color: var(--white);
             position: sticky;
             top: 0;
@@ -222,15 +230,16 @@
             padding: 10px 12px;
             border: 1px solid var(--sheets-bordeaux);
             text-align: left;
-            font-weight: bold;
-            font-size: 1rem;
+            font-weight: 500;
+            font-size: 1.1rem;
+            text-transform: uppercase;
         }
 
         #gamesTable td {
             padding: 8px 12px;
             border: 1px solid var(--sheets-border-color);
-            color: var(--sheets-bordeaux); /* Texte rouge bordeaux comme sur la capture */
-            font-weight: 500;
+            color: var(--sheets-bordeaux);
+            font-weight: 400;
         }
 
         /* Mode rangée claire / rose alternée */
@@ -238,11 +247,11 @@
             background-color: var(--white);
         }
         .row-odd {
-            background-color: var(--sheets-pink-bg); /* Rose clair exact */
+            background-color: var(--sheets-pink-bg);
         }
 
         #gamesTable tbody tr:hover {
-            background-color: #f5d3cf !important; /* Petit survol harmonisé */
+            background-color: #f5d3cf !important;
         }
 
         /* --- SOIRÉE MENSUELLE --- */
@@ -489,7 +498,7 @@
             </div>
         </section>
 
-        <!-- 2. SECTION NOTRE LUDOTHEQUE (TABLEAU SHEETS PERSONNALISÉ) -->
+        <!-- 2. SECTION NOTRE LUDOTHEQUE (TABLEAU SHEETS EN OSWALD) -->
         <section id="ludotheque">
             <h2>Notre Ludothèque</h2>
             <p class="intro-text">+ de 150 jeux mis à disposition et présentés par nos bénévoles</p>
@@ -680,7 +689,7 @@
         games.forEach((game, index) => {
             const tr = document.createElement('tr');
             
-            // Alternance exactement comme votre image (Ligne 1 Blanche, Ligne 2 Rose...)
+            // Alternance Ligne Blanche / Ligne Rose
             tr.className = index % 2 === 0 ? 'row-even' : 'row-odd';
 
             const dureeVal = String(game[2]);
